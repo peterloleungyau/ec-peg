@@ -64,11 +64,6 @@
 ;; sequence can be obtained with AND if there is an explicit need.
 ;; but sequence is often implicit in these macros.
 
-(defmacro e@ (vars e &body exps)
-  "Short-hand to give name(s) to value(s) of expression E, and if it is true, then evaluate the EXPS as sequence."
-  `(multiple-value-bind ,vars ,e
-     (and ,@exps)))
-
 (eval-when (:compile-toplevel)
   (defun terminal-exp-p (exp)
     "Predicate for terminal expression.
@@ -101,6 +96,15 @@ If "
            `(and ,(gen-one (car exp) first-input)
                  ,@(mapcar #'gen-one (cdr exp))))))
   )
+
+(defmacro is (con )
+  ;; TODO
+  nil)
+
+(defmacro e@ (vars e &body exps)
+  "Short-hand to give name(s) to value(s) of expression E, and if it is true, then evaluate the EXPS as sequence."
+  `(multiple-value-bind ,vars ,e
+     ,(gen-seq exps)))
 
 (defmacro e/n (vars &body exps)
   "Ordered choice, each of EXPS is an implicit sequence if it is a list, and non-list EXP is as if it is a list of one item.
